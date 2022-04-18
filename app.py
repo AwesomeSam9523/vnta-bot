@@ -63,8 +63,9 @@ async def index():
 
 @app.route('/callback')
 async def callback():
-    if request.values.get('error'):
-        return request.values['error']
+    data = await request.values
+    if data.get('error'):
+        return data['error']
     discord = make_session(state=session.get('oauth2_state'))
     token = discord.fetch_token(
         TOKEN_URL,
