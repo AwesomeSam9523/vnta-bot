@@ -1,0 +1,14 @@
+requests~=2.25.1
+prettytable~=2.1.0
+pillow
+psutil
+numexpr
+git+https://github.com/Rapptz/discord.py@89009759e029701f5e68cf7b5eaf015b0c29c521
+git+https://github.com/AwesomeSam9523/discord-ext-ipc
+pymongo
+pymongo[srv]
+jishaku
+motor
+flask
+requests_oauthlib
+git+https://github.com/BlackThunder01001/winerp@3fb6f05a7908f645237683dc79443b934203098b

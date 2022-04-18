@@ -1,0 +1,1 @@
+web: python main.py & hypercorn -b 0.0.0.0:$PORT app:app & wait -n
