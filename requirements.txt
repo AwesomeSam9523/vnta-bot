@@ -8,7 +8,7 @@ git+https://github.com/AwesomeSam9523/discord-ext-ipc
 pymongo
 pymongo[srv]
 jishaku
-motor
-flask
+motor==2.5.0
+quart
 requests_oauthlib
 git+https://github.com/BlackThunder01001/winerp@3fb6f05a7908f645237683dc79443b934203098b
