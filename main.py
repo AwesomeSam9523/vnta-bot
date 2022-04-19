@@ -54,10 +54,10 @@ async def handle_disregard(userid):
     bot.muted.remove(userid)
 
 @bot.ipc.event
-async def on_winerp_information(*args, **kwargs):
-    print(args)
-    print(kwargs)
-    print('info')
+async def on_winerp_information(data: dict):
+    user = data['user']
+    connections = data['connections']
+    # WIP
 
 @tasks.loop(minutes=10)
 async def ping():
