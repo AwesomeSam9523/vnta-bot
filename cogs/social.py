@@ -77,7 +77,10 @@ async def yt_socials_check():
                         requests = 2500
                     await bot.database.socials.update_one({'platform': 'youtube'}, {'$set': {'requests': requests}})
                     return
-            vidid = vids["items"][0]["contentDetails"]["videoId"]
+            try:
+                vidid = vids["items"][0]["contentDetails"]["videoId"]
+            except KeyError:
+                continue
             if vidid not in donevids:
                 await publishNewVideo(vidid, vids["items"][0]["snippet"]["channelTitle"])
                 await bot.database.socials.update_one({'platform': 'youtube'}, {'$push': {'done': vidid}})
@@ -123,7 +126,7 @@ async def twitter_socials_check():
             uri = f"https://api.twitter.com/2/users/{id}/tweets"
             a = await session.get(uri, headers=header)
             res = await a.json()
-            res = data["data"][0]
+            res = res["data"][0]
             if res['id'] not in donetweets:
                 await twitterNewPost(sub['name'], data)
                 await bot.database.socials.update_one({'platform': 'twitter'}, {'$push': {'done': res['id']}})
