@@ -271,6 +271,7 @@ async def one_ready():
     global staff
     print("Connected")
     await run_winerp_server()
+    await bot.ipc.start()
     ping.start()
     await bot.wait_until_ready()
     bot.staff = [x.id for x in bot.get_guild(719946380285837322).get_role(813439914862968842).members]
