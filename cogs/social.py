@@ -97,11 +97,12 @@ async def twitch_socials_check():
                 f"https://id.twitch.tv/oauth2/token?client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&grant_type=client_credentials"
             )
             res = await a.json()
-            await bot.database.socials.update_one({'platform': 'twitch'}, {'$set': {
-                'expiry': res['expires_in'] + time.time(),
-                'token': res['access_token']
-            }})
-        headers = {'Authorization': f'Bearer {bot.twitchapi["token"]}', 'Client-Id': CLIENT_ID}
+            await bot.database.socials.update_one(
+                {'platform': 'twitch'}, 
+                {'$set': {'expiry': res['expires_in'] + time.time(), 'token': res['access_token']}}
+            )
+            data['token'] = res['access_token']
+        headers = {'Authorization': f'Bearer {data["token"]}', 'Client-Id': CLIENT_ID}
         for i in data["subs"]:
             i = i['id']
             uri = f"https://api.twitch.tv/helix/streams?user_login={i}"
@@ -128,7 +129,7 @@ async def twitter_socials_check():
             res = await a.json()
             res = res["data"][0]
             if res['id'] not in donetweets:
-                await twitterNewPost(sub['name'], data)
+                await twitterNewPost(sub['name'], res['id'], data)
                 await bot.database.socials.update_one({'platform': 'twitter'}, {'$push': {'done': res['id']}})
 
 async def publishNewVideo(vidid, name):
@@ -162,14 +163,14 @@ async def twitchSteamEnd(data: dict):
     
     await bot.database.socials.update_one({'platform': 'twitch'}, {'$pull': {'live': {'msg': data['msg']}}})
 
-async def twitterNewPost(user: str, data: dict):
+async def twitterNewPost(user: str, id: int, data: dict):
     data = await bot.database.socials.find_one({'platform': 'twitter'})
     chl = bot.get_channel(data["channel"])
     role = chl.guild.get_role(data["role"])
     twmsg = data["msg"].format(
         name=user,
         role=role.mention,
-        link=f"https://twitter.com/i/web/status/{data['id']}"
+        link=f"https://twitter.com/i/web/status/{id}"
     )
     await chl.send(twmsg)
 
