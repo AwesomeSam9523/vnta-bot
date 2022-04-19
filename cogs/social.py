@@ -91,6 +91,7 @@ async def twitch_socials_check():
     async with aiohttp.ClientSession() as session:
         data = await bot.database.socials.find_one({'platform': 'twitch'})
         live: list = data["live"]
+        allLive = [x['sub'] for x in live]
         if data["expiry"] < time.time():
             print("Requesting new token...")
             a = await session.post(
@@ -110,10 +111,12 @@ async def twitch_socials_check():
             req2 = await a.json()
             fin = req2.get("data", [])
             if len(fin) != 0:
-                if i not in live:
+                if i not in allLive:
                     await twitchStreamStart(i, fin[0])
             else:
-                await twitchSteamEnd(live[i])
+                data = [x for x in live if x['sub'] == i]
+                if len(data) != 0:
+                    await twitchSteamEnd(data[0])
 
 @tasks.loop(seconds=40)
 async def twitter_socials_check():
