@@ -175,6 +175,10 @@ class Socials(commands.Cog):
         global bot
         bot = bot_
 
+        yt_socials_check.start()
+        twitch_socials_check.start()
+        twitter_socials_check.start()
+
     @commands.command(aliases=["soc"])
     async def socials(
         self,
