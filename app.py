@@ -19,8 +19,7 @@ app.config['SECRET_KEY'] = OAUTH2_CLIENT_SECRET
 
 client = winerp.Client('server', port=8080)
 
-if 'http://' in OAUTH2_REDIRECT_URI:
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = 'true'
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 def token_updater(token):
     session['oauth2_token'] = token
@@ -54,7 +53,8 @@ def make_session(token=None, state=None, scope=None):
 async def index():
     scope = request.args.get(
         'scope',
-        'identify connections')
+        'identify connections'
+    )
     discord = make_session(scope=scope.split(' '))
     authorization_url, state = discord.authorization_url(AUTHORIZATION_BASE_URL)
     session['oauth2_state'] = state

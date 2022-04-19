@@ -62,7 +62,7 @@ async def on_winerp_information(*args, **kwargs):
 @tasks.loop(minutes=10)
 async def ping():
     async with aiohttp.ClientSession() as session:
-        async with session.get('https://vnta.herokuapp.com') as res:
+        async with session.get('https://vnta.herokuapp.com/ping') as res:
             status = res.status
 
 @bot.check
