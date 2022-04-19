@@ -83,7 +83,7 @@ async def me():
     connections = discord.get(API_BASE_URL + '/users/@me/connections').json()
     
     await client.inform({'user': user, 'connections': connections}, ['bot'])
-    return render_template("success.html")
+    return await render_template("success.html")
 
 @app.route("/ping")
 async def pong():
