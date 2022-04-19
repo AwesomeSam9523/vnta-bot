@@ -118,14 +118,14 @@ async def twitter_socials_check():
     subs = data['subs']
     donetweets = data["done"]
     async with aiohttp.ClientSession() as session:
-        for k, i in subs.items():
-            i = i['id']
-            uri = f"https://api.twitter.com/2/users/{i}/tweets"
+        for sub in subs:
+            id = sub['id']
+            uri = f"https://api.twitter.com/2/users/{id}/tweets"
             a = await session.get(uri, headers=header)
             res = await a.json()
             res = data["data"][0]
             if res['id'] not in donetweets:
-                await twitterNewPost(k, data)
+                await twitterNewPost(sub['name'], data)
                 await bot.database.socials.update_one({'platform': 'twitter'}, {'$push': {'done': res['id']}})
 
 async def publishNewVideo(vidid, name):
