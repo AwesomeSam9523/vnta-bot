@@ -59,6 +59,12 @@ async def on_winerp_information(*args, **kwargs):
     print(kwargs)
     print('info')
 
+@tasks.loop(minutes=10)
+async def ping():
+    async with aiohttp.ClientSession() as session:
+        async with session.get('https://vnta.herokuapp.com') as res:
+            status = res.status
+
 @bot.check
 async def general(ctx):
     state = await spam_protect(ctx.author.id)
@@ -264,6 +270,7 @@ async def run_winerp_server():
 async def one_ready():
     global staff
     print("Connected")
+    ping.start()
     await bot.wait_until_ready()
     await run_winerp_server()
     bot.staff = [x.id for x in bot.get_guild(719946380285837322).get_role(813439914862968842).members]
