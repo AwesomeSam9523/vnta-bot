@@ -462,6 +462,7 @@ async def starboard(payload:discord.RawReactionActionEvent, force=False):
         if len(msg.attachments) != 0:
             embed.set_image(url=msg.attachments[0].url)
         msg = await bot.starboards.send(f"✨ **{stars}** <#{payload.channel_id}>", embed=embed)
+        msgdata = {}
         msgdata['message'] = msg.id
         await bot.database.starboard.update_one({'payload': payload.message_id}, {'$set': msgdata}, upsert=True)
 

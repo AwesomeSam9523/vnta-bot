@@ -48,7 +48,7 @@ wcwidth==0.2.5
 websocket-server==0.6.4
 websockets==10.3
 Werkzeug==2.1.1
-winerp==1.2.0
+winerp @ git+https://github.com/BlackThunder01001/winerp@fa1dd83ec7edabb2a8a049fa00a1fd2257db49d9
 wsproto==1.1.0
 yarl==1.7.2
 zipp==3.8.0
