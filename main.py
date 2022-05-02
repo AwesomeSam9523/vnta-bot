@@ -273,7 +273,7 @@ async def run_winerp_server():
 async def one_ready():
     global staff
     print("Connected")
-    asyncio.create_task(run_winerp_server())
+    #asyncio.create_task(run_winerp_server())
     await bot.wait_until_ready()
     bot.staff = [x.id for x in bot.get_guild(719946380285837322).get_role(813439914862968842).members]
     await load_peeps()
@@ -282,6 +282,7 @@ async def one_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{vnta.member_count} peeps"))
     bot.dev = bot.get_user(771601176155783198)
     bot.linkinglogs = bot.get_channel(861463678179999784)
+    fotd_check.start()
     print("Ready")
 
 

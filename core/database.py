@@ -40,3 +40,7 @@ class Database:
     @property
     def starboard(self):
         return self._database['starboard']
+    
+    @property
+    def general(self):
+        return self._database['general']
