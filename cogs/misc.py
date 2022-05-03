@@ -101,7 +101,7 @@ class Misc(commands.Cog):
         for val in ['suggest', 'scopes', 'css', 'settings']:
             data = d[val]
             for i in data:
-                uuid_, data = i.items()
+                uuid_, data = list(i.items())[0]
                 bot.add_view(Reviewal(uuid_, val), message_id=data[2])
     
     @commands.command()
@@ -377,8 +377,6 @@ class Post(discord.ui.View):
             )
             embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar.url)
             em = await stfchl.send(embed=embed, view=Reviewal(self.uuid, 'suggest'))
-            posts = await bot.database.posts.find_one({'name': 'approval'})
-            posts["suggest"][str(em.id)] = (ctx.author.id, sug)
             await bot.database.posts.update_one(
                 {'name': 'approval'},
                 {'$push': {'suggest': {self.uuid: [ctx.author.id, sug, em.id]}}}
@@ -388,8 +386,6 @@ class Post(discord.ui.View):
                 "Your suggestion is sent to staff for approval."
                 " It will show in <#861555361264697355> once its approved!"
             )
-            await em.add_reaction(economysuccess)
-            await em.add_reaction(economyerror)
         except:
             pass
 
@@ -427,8 +423,6 @@ class Post(discord.ui.View):
                 {'name': 'approval'},
                 {'$push': {'settings': {self.uuid: [ctx.author.id, file, a.id]}}}
             )
-            await a.add_reaction(economysuccess)
-            await a.add_reaction(economyerror)
         except asyncio.TimeoutError:
             pass
 
@@ -467,8 +461,6 @@ class Post(discord.ui.View):
                 {'name': 'approval'},
                 {'$push': {'css': {self.uuid: [ctx.author.id, file, a.id]}}}
             )
-            await a.add_reaction(economysuccess)
-            await a.add_reaction(economyerror)
         except asyncio.TimeoutError:
             pass
 
@@ -502,8 +494,6 @@ class Post(discord.ui.View):
                 {'name': 'approval'},
                 {'$push': {'scopes': {self.uuid: [ctx.author.id, file, a.id]}}}
             )
-            await a.add_reaction(economysuccess)
-            await a.add_reaction(economyerror)
         except asyncio.TimeoutError:
             pass
 
@@ -594,14 +584,16 @@ class Accept(discord.ui.Button):
         )
     
     async def callback(self, interaction: discord.Interaction):
-        uuid_ = self.uuid
+        await interaction.response.send_message(
+            'Processing...', ephemeral=True
+        )
         type = self.type_
         
         data = await bot.database.posts.find_one({'name': 'approval'})
-        data = data[self.type_][str(self.uuid)]
+        data = [x for x in data[self.type_] if list(x.keys())[0] == str(self.uuid)][0][self.uuid]
         user = data[0]
         try:
-            bot.get_user(user).send(
+            await bot.get_user(user).send(
                 f'{economyerror} Your {self.type_} was rejected by {str(interaction.user)}'
             )
         except:
@@ -620,11 +612,7 @@ class Accept(discord.ui.Button):
             {'name': 'approval'},
             {'$pull': {self.type_: {str(self.uuid): data}}}
         )
-        await interaction.response.send_message(
-            f"{economysuccess} Your {self.type_} was accepted by {str(interaction.user)}",
-            ephemeral=True
-        )
-        await interaction.response.delete()
+        #await interaction.response.delete()
         await interaction.message.edit(content=f'{economysuccess} Accepted by: {str(interaction.user)}', view=None)
 
 class Decline(discord.ui.Button):
@@ -638,11 +626,14 @@ class Decline(discord.ui.Button):
         )
     
     async def callback(self, interaction: discord.Interaction):
+        await interaction.response.send_message(
+            'Processing...', ephemeral=True
+        )
         data = await bot.database.posts.find_one({'name': 'approval'})
-        data = data[self.type_][str(self.uuid)]
+        data = [x for x in data[self.type_] if list(x.keys())[0] == str(self.uuid)][0][self.uuid]
         user = data[0]
         try:
-            bot.get_user(user).send(
+            await bot.get_user(user).send(
                 f'{economyerror} Your {self.type_} was rejected by {str(interaction.user)}'
             )
         except:
