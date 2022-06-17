@@ -56,7 +56,7 @@ class VntaBot(commands.Bot):
         return await self.database.links.find_one({ 'id': id })
     
     async def getBgData(self, ign: str) -> Optional[dict]:
-        return await self.database.bgdata.find_one({ 'ign': ign.lower() })
+        return await self.database.bgdata.find_one({ 'id': ign.lower() }) or await self.database.bgdata.find_one({ 'ign': ign.lower() })
     
     async def getUserData(self, id: int) -> Optional[dict]:
         return await self.database.userdata.find_one({ 'id': id })
