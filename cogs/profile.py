@@ -632,7 +632,7 @@ __Choose the below options to modify the background:__\n
             color=embedcolor
         )
         embed.set_image(url=f"attachment://profile.{data['file'].lower()[-3:]}")
-        file = await self.profile(ctx, ign={"main":ign}, via=True)
+        file = await self.profile(ctx, ign={"main":ign}, _via=True)
         embed.set_footer(text="Type 'save' to save background\nType 'cancel' to cancel all changes")
         await ctx.send(embed=embed, file=file)
 

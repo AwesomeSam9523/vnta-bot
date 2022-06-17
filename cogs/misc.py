@@ -594,7 +594,7 @@ class Accept(discord.ui.Button):
         user = data[0]
         try:
             await bot.get_user(user).send(
-                f'{economyerror} Your {self.type_} was rejected by {str(interaction.user)}'
+                f'{economysuccess} Your {self.type_} was accepted by {str(interaction.user)}'
             )
         except:
             pass
